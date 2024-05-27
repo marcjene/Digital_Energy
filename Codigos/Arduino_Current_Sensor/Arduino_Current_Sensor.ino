@@ -4,6 +4,9 @@
 /*****____________WRITE HERE THE CODE_________________*******/
 const int SensorPin = A0, RefPin = A2;
 const int Rshunt = 33;
+int counter = 0;
+float I_RMS_sum = 0;
+float Power = 0;
 
 // Definition of auxiliary variables 
 unsigned long time_ant = 0, difTime = 0, act_time = 0;
@@ -27,7 +30,7 @@ so as to communicate with the computer. Use of the availables reates *******/
 /*****____________WRITE HERE THE CODE_________________*******/
 void setup() {
   // Initialize the serial port communications with a baudrate of 115200 bit/s
-  Serial.begin(115200)
+  Serial.begin(115200);
 }
 
 // Loop code
@@ -80,6 +83,20 @@ void loop()
     
     // Print the RMS
     // Serial.print("Ifilt = ");
-    Serial.println(Ifilt);
+    //Serial.println(Ifilt);
+    
+    I_RMS_sum += Irms;
+    counter++;
+    if (counter == 250) {
+
+      Serial.print(I_RMS_sum/counter);
+      Serial.print(";");
+      Power = (I_RMS_sum/counter)*230;
+      Serial.print(Power);
+      Serial.print(";");
+      Serial.println();
+      counter=0;
+      I_RMS_sum = 0;
+      }
   }
 }
